@@ -1,0 +1,584 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="markhor">
+    <xacro:include filename="$(find markhor_description)/urdf/markhor_inertial.xacro" />
+
+    <xacro:arg name="robot_namespace" default="markhor" />
+
+    <xacro:include filename="$(find markhor_description)/urdf/materials.xacro" />
+    <xacro:property name="flipper_lower_limit" value="${-pi}"/>
+    <xacro:property name="flipper_upper_limit" value="0" />
+    <xacro:property name="flipper_velocity_limit" value="16.75" />
+    <xacro:property name="flipper_torque_limit" value="184" />
+
+    <xacro:property name="track_velocity_limit" value="5.34" />
+    <xacro:property name="track_torque_limit" value="94.5" />
+
+    <xacro:property name="flippers_shift_x" value="0.34115000" />
+    <xacro:property name="flippers_shift_y" value="0.4330283" />
+    <xacro:property name="flippers_height" value="0.11118760" />
+    <xacro:property name="flippers_seperation" value="${flippers_shift_y} * 2" />
+
+    <xacro:property name="track_shift_x" value="0.34115000" />
+    <xacro:property name="track_shift_y" value="0.2230283" />
+    <xacro:property name="track_height" value="0.12118760" />
+    <xacro:property name="track_seperation" value="${track_shift_y} * 2" />
+
+    <link name="base_footprint" />
+    <link name="base_link" />
+    <joint name="base_link_j" type="fixed">
+        <origin xyz="0 0 -0.085" rpy="0 0 0" />
+        <parent link="base_link" />
+        <child link="base_footprint" />
+    </joint>
+
+
+    <link name="base_body">
+        <visual>
+            <geometry>
+                <mesh filename="package://markhor_description/meshes/Main_Body.STL" />
+            </geometry>
+            <origin xyz="-0.67229 -0.63549 -0.43839" rpy="0 0 0" />
+            <material name="red" />
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://markhor_description/meshes/Main_Body.STL" />
+            </geometry>
+            <origin xyz="0.67229 0.62549 -0.43839" rpy="0 0 0" />
+        </collision>
+        <inertial>
+            <mass value="6.38" />
+            <origin xyz="-0.00002529 0.00000008 -0.06049447" rpy="0 0 0" />
+            <inertia
+                ixx="3.2907" ixy="0.31435" ixz="-7.7784E-05"
+                iyy="11.022" iyz="0.00033867"
+                izz="9.2741" />
+        </inertial>
+    </link>
+
+
+    <joint name="base_body_j" type="fixed">
+        <parent link="base_link" />
+        <child link="base_body" />
+    </joint>
+
+    <link name="Wh_FL">
+        <inertial>
+            <origin xyz="6.6613E-16 -1.1102E-16 0.064975" rpy="0 0 0" />
+            <mass
+                value="3.7014" />
+            <inertia
+                ixx="0.018774"
+                ixy="-1.7547E-15"
+                ixz="4.319E-17"
+                iyy="0.018775"
+                iyz="1.2334E-17"
+                izz="0.029634" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="package://markhor_description/meshes/Wh_FL.STL" />
+            </geometry>
+            <material name="green" />
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://markhor_description/meshes/Wh_FL.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <joint name='joint_track_fl' type='fixed'>
+        <origin xyz="${track_shift_x} ${track_shift_y} ${track_height}" rpy="${pi/2} 0 ${pi}" />
+        <parent link="base_body" />
+        <child link="Wh_FL" />
+    </joint>
+
+
+    <link name="Wh_FR">
+        <inertial>
+            <origin xyz="2.2204E-16 -3.9968E-15 -0.065025" rpy="0 0 0" />
+            <mass
+                value="3.7014" />
+            <inertia
+                ixx="0.018774"
+                ixy="-1.7576E-15"
+                ixz="-2.2793E-19"
+                iyy="0.018775"
+                iyz="1.5364E-17"
+                izz="0.029634" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="package://markhor_description/meshes/Wh_FR.STL" />
+            </geometry>
+            <material name="orange" />
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://markhor_description/meshes/Wh_FR.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <joint name='joint_track_fr' type='fixed'>
+        <origin xyz="${track_shift_x} -${track_shift_y} ${track_height}" rpy="${pi/2} 0 ${pi}" />
+        <parent link="base_body" />
+        <child link="Wh_FR" />
+    </joint>
+
+
+
+    <link name="Wh_RL">
+        <inertial>
+            <origin xyz="7.2164E-16 -1.1102E-16 0.064975" rpy="0 0 0" />
+            <mass
+                value="3.7014" />
+            <inertia
+                ixx="0.018774"
+                ixy="-1.7866E-15"
+                ixz="4.1654E-17"
+                iyy="0.018775"
+                iyz="9.4657E-18"
+                izz="0.029634" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="package://markhor_description/meshes/Wh_RL.STL" />
+            </geometry>
+            <material name="white" />
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://markhor_description/meshes/Wh_RL.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <joint name='joint_track_rl' type='fixed'>
+        <origin xyz="-${track_shift_x} ${track_shift_y} ${track_height}" rpy="${pi/2} 0 ${pi}" />
+        <parent link="base_body" />
+        <child link="Wh_RL" />
+    </joint>
+
+
+
+    <link name="Wh_RR">
+        <inertial>
+            <origin xyz="7.2164E-16 -1.1102E-16 0.064975" rpy="0 0 0" />
+            <mass
+                value="3.7014" />
+            <inertia
+                ixx="0.018774"
+                ixy="-1.7866E-15"
+                ixz="4.1654E-17"
+                iyy="0.018775"
+                iyz="9.4657E-18"
+                izz="0.029634" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="package://markhor_description/meshes/Wh_RR.STL" />
+            </geometry>
+            <material name="grey" />
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://markhor_description/meshes/Wh_RR.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <joint name='joint_track_rr' type='fixed'>
+        <origin xyz="-${track_shift_x} -${track_shift_y} ${track_height}" rpy="${pi/2} 0 ${pi}" />
+        <parent link="base_body" />
+        <child link="Wh_RR" />
+    </joint>
+
+
+
+    <link name="flipper_fl">
+        <visual>
+            <geometry>
+                <mesh filename="package://markhor_description/meshes/Fl_FL.STL" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="${pi} 0 ${pi/2}" />
+            <material name="green" />
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://markhor_description/meshes/Fl_FL.STL" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="${pi} 0 ${pi/2}" />
+            <surface>
+                <friction>
+                    <ode>
+                        <mu>0.65</mu>
+                        <mu2>0.85</mu2>
+                    </ode>
+                </friction>
+                <contact>
+                    <ode />
+                </contact>
+            </surface>
+        </collision>
+        <max_contacts>20</max_contacts>
+        <xacro:markhor_inertial type="flipper" />
+    </link>
+
+    <link name="flipper_fl_motor">
+        <xacro:markhor_inertial type="virtual" />
+    </link>
+
+    <joint name="flipper_fl_j" type="revolute">
+        <parent link="base_link" />
+        <child link="flipper_fl" />
+        <axis xyz="1 0 0" rpy="0 0 0" />
+        <origin xyz="${flippers_shift_x} ${flippers_shift_y} ${flippers_height}" rpy="${pi/2} 0 ${-pi/2}" />
+        <limit effort="${flipper_torque_limit}" velocity="${flipper_velocity_limit}"
+            lower="${flipper_lower_limit}" upper="${flipper_upper_limit}" />
+        <dynamics damping="400" />
+        <sensor name="force_torque" type="force_torque">
+            <update_rate>30</update_rate>
+        </sensor>
+    </joint>
+
+    <joint name="flipper_fl_motor_j" type="continuous">
+        <parent link="flipper_fl" />
+        <child link="flipper_fl_motor" />
+        <axis xyz="1 0 0" rpy="0 0 0" />
+        <limit effort="${track_torque_limit}" velocity="${track_velocity_limit}" />
+    </joint>
+
+    <transmission name="flipper_fl_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="flipper_fl_j">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="flipper_fl_actuator">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+    <transmission name="flipper_fl_track_trans" type="SimpleTransmission">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="flipper_fl_motor_j">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="flipper_fl_track_motor">
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+
+
+    
+
+
+    <link name="flipper_fr">
+        <visual>
+            <geometry>
+                <mesh filename="package://markhor_description/meshes/Fl_RL.STL" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 ${pi/2}" />
+            <material name="orange" />
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://markhor_description/meshes/Fl_RL.STL" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 ${pi/2}" />
+            <surface>
+                <friction>
+                    <ode>
+                        <mu>0.65</mu>
+                        <mu2>0.85</mu2>
+                    </ode>
+                </friction>
+                <contact>
+                    <ode />
+                </contact>
+            </surface>
+        </collision>
+        <max_contacts>20</max_contacts>
+        <xacro:markhor_inertial type="flipper" />
+    </link>
+
+    <link name="flipper_fr_motor">
+        <xacro:markhor_inertial type="virtual" />
+    </link>
+
+    <joint name="flipper_fr_j" type="revolute">
+        <parent link="base_link" />
+        <child link="flipper_fr" />
+        <axis xyz="1 0 0" rpy="0 0 0" />
+        <origin xyz="${flippers_shift_x} -${flippers_shift_y} ${flippers_height}" rpy="${pi/2} 0 ${-pi/2}" />
+        <limit effort="${flipper_torque_limit}" velocity="${flipper_velocity_limit}"
+            lower="${flipper_lower_limit}" upper="${flipper_upper_limit}" />
+        <dynamics damping="400" />
+    </joint>
+
+    <joint name="flipper_fr_motor_j" type="continuous">
+        <parent link="flipper_fr" />
+        <child link="flipper_fr_motor" />
+        <axis xyz="1 0 0" rpy="0 0 0" />
+        <limit effort="${track_torque_limit}" velocity="${track_velocity_limit}" />
+    </joint>
+
+    <transmission name="flipper_fr_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="flipper_fr_j">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="flipper_fr_actuator">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+    <transmission name="flipper_fr_track_trans" type="SimpleTransmission">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="flipper_fr_motor_j">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="flipper_fr_track_motor">
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+
+    <link name="flipper_rl">
+        <visual>
+            <geometry>
+                <mesh filename="package://markhor_description/meshes/Fl_RL.STL" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 ${pi/2}" />
+            <material name="white" />
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://markhor_description/meshes/Fl_RL.STL" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 ${pi/2}" />
+            <surface>
+                <friction>
+                    <ode>
+                        <mu>0.65</mu>
+                        <mu2>0.85</mu2>
+                    </ode>
+                </friction>
+                <contact>
+                    <ode />
+                </contact>
+            </surface>
+        </collision>
+        <max_contacts>20</max_contacts>
+        <xacro:markhor_inertial type="flipper" />
+    </link>
+
+    <link name="flipper_rl_motor">
+        <xacro:markhor_inertial type="virtual" />
+    </link>
+
+    <joint name="flipper_rl_j" type="revolute">
+        <parent link="base_link" />
+        <child link="flipper_rl" />
+        <axis xyz="1 0 0" rpy="0 0 0" />
+        <origin xyz="-${flippers_shift_x} ${flippers_shift_y} ${flippers_height}" rpy="${pi/2} 0 ${pi/2}" />
+        <limit effort="${flipper_torque_limit}" velocity="${flipper_velocity_limit}"
+            lower="${flipper_lower_limit}" upper="${flipper_upper_limit}" />
+        <dynamics damping="400" />
+    </joint>
+
+    <joint name="flipper_rl_motor_j" type="continuous">
+        <parent link="flipper_rl" />
+        <child link="flipper_rl_motor" />
+        <axis xyz="1 0 0" rpy="0 0 0" />
+        <limit effort="${track_torque_limit}" velocity="${track_velocity_limit}" />
+    </joint>
+
+    <transmission name="flipper_rl_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="flipper_rl_j">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="flipper_rl_actuator">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+    <transmission name="flipper_rl_track_trans" type="SimpleTransmission">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="flipper_rl_motor_j">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="flipper_rl_track_motor">
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+
+    <link name="flipper_rr">
+        <visual>
+            <geometry>
+                <mesh filename="package://markhor_description/meshes/Fl_RR.STL" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="${pi} 0 ${pi/2}" />
+            <material name="grey" />
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://markhor_description/meshes/Fl_RR.STL" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="${pi} 0 ${pi/2}" />
+            <surface>
+                <friction>
+                    <ode>
+                        <mu>0.65</mu>
+                        <mu2>0.85</mu2>
+                    </ode>
+                </friction>
+                <contact>
+                    <ode />
+                </contact>
+            </surface>
+        </collision>
+        <max_contacts>20</max_contacts>
+        <xacro:markhor_inertial type="flipper" />
+    </link>
+
+    <link name="flipper_rr_motor">
+        <xacro:markhor_inertial type="virtual" />
+    </link>
+
+    <joint name="flipper_rr_j" type="revolute">
+        <parent link="base_link" />
+        <child link="flipper_rr" />
+        <axis xyz="1 0 0" rpy="0 0 0" />
+        <origin xyz="-${flippers_shift_x} -${flippers_shift_y} ${flippers_height}" rpy="${pi/2} 0 ${pi/2}" />
+        <limit effort="${flipper_torque_limit}" velocity="${flipper_velocity_limit}"
+            lower="${flipper_lower_limit}" upper="${flipper_upper_limit}" />
+        <dynamics damping="400" />
+    </joint>
+
+    <joint name="flipper_rr_motor_j" type="continuous">
+        <parent link="flipper_rr" />
+        <child link="flipper_rr_motor" />
+        <axis xyz="1 0 0" rpy="0 0 0" />
+        <limit effort="${track_torque_limit}" velocity="${track_velocity_limit}" />
+    </joint>
+
+    <transmission name="flipper_rr_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="flipper_rr_j">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="flipper_rr_actuator">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+    <transmission name="flipper_rr_track_trans" type="SimpleTransmission">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="flipper_rr_motor_j">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="flipper_rr_track_motor">
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+
+    <gazebo reference="flipper_fl">
+        <material>Gazebo/Grey</material>
+    </gazebo>
+
+    <gazebo reference="Wh_FR">
+        <material>Gazebo/Black</material>
+    </gazebo>
+
+    <gazebo reference="Wh_FL">
+        <material>Gazebo/Black</material>
+    </gazebo>
+
+    <gazebo reference="Wh_RR">
+        <material>Gazebo/Black</material>
+    </gazebo>
+
+    <gazebo reference="Wh_RL">
+        <material>Gazebo/Black</material>
+    </gazebo>
+
+
+    <gazebo reference="flipper_fr">
+        <material>Gazebo/Grey</material>
+    </gazebo>
+
+    <gazebo reference="flipper_rl">
+        <material>Gazebo/Grey</material>
+    </gazebo>
+
+    <gazebo reference="flipper_rr">
+        <material>Gazebo/Grey</material>
+    </gazebo>
+
+    <gazebo reference="flipper_rr">
+        <material>Gazebo/Grey</material>
+    </gazebo>
+
+    <gazebo reference="base_body">
+        <material>Gazebo/Red</material>
+    </gazebo>
+
+    <gazebo reference="tower_body">
+        <material>Gazebo/Grey</material>
+    </gazebo>
+
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>/$(arg robot_namespace)/flippers</robotNamespace>
+        </plugin>
+
+        <plugin filename="libSimpleTrackedVehiclePlugin.so" name="simple_tracked_vehicle">
+            <body>base_link</body>
+            <left_track>flipper_fl</left_track>
+            <right_track>flipper_fr</right_track>
+            <left_flipper>flipper_rl</left_flipper>
+            <right_flipper>flipper_rr</right_flipper>
+            <track_mu>0.65</track_mu>
+            <track_mu2>0.85</track_mu2>
+            <tracks_separation>${flippers_seperation}</tracks_separation>
+            <robot_namespace>markhor</robot_namespace>
+        </plugin>
+
+        <plugin name='tracked_vehicle_interface'
+            filename='libgazebo_ros_tracked_vehicle_interface.so'>
+            <commandROSTopic>/markhor/tracks/diff_drive_controller/cmd_vel</commandROSTopic>
+            <commandIGNTopic>~/markhor/cmd_vel_twist</commandIGNTopic>
+            <odometryTopic>/markhor/tracks/diff_drive_controller/odom</odometryTopic>     <!-- ROS topic
+            for the odometry data - remap if you're using another odom source -->
+
+            <robotBaseFrame>base_link</robotBaseFrame>
+            <odometryFrame>odom</odometryFrame>     <!-- tf frame of the odometry messages -->
+
+            <tracks_separation>${flippers_seperation}</tracks_separation>
+            <publishOdomTF>false</publishOdomTF> <!-- odom is now being published by markhor slam
+            package -->
+        </plugin>
+    </gazebo>
+
+
+
+</robot>
